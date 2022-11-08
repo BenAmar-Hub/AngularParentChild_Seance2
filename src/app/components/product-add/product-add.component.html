@@ -1,0 +1,35 @@
+<!-- <on va utiliser reactive forms, n'oublier pas de tester la creation du formgroup
+puisque il est creer dans nginit() -->
+<div class="container" *ngIf="productFormGroup">
+  <!-- {{productFormGroup.value|json}} -->
+  <form [formGroup]="productFormGroup">
+    <div class="form-group">
+      <label>Name</label>
+      <!-- pour le validator,on applique un style lorsque le champ
+        est submitted mais il contient des errors -->
+      <input type="text" class="form-control" formControlName="name" [ngClass]="{'is-invalid':submitted && productFormGroup.controls['name'].errors}">
+      <!-- pour afficher le message d'erreur on ajoutera un div
+        et on teste si l'erreur conidere le validator required, mais on peut ajouter des autres-->
+      <div *ngIf="submitted && productFormGroup.controls['name'].errors" class="invalid-feedback">
+        <div *ngIf="productFormGroup.controls['name'].errors['required']">Name is Required</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Price</label>
+      <input type="text" class="form-controlor" formControlName="price">
+    </div>
+    <div class="form-group">
+      <label>Quantity</label>
+      <input type="text" class="form-controlor" formControlName="quantity">
+    </div>
+    <div class="form-group">
+      <label>Selected</label>
+      <input type="checkbox" formControlName="selected" class="form-check">
+    </div>
+    <div class="form-group">
+      <label>Available</label>
+      <input type="checkbox" formControlName="available" class="form-check">
+    </div>
+    <button class="btn btn-success" (click)="onSaveProduct()">Save</button>
+  </form>
+</div>
