@@ -5,30 +5,22 @@
       "name": "Computer",
       "price": 21000,
       "quantity": 89,
-      "available": true,
-      "selected": true
+      "selected": false,
+      "available": true
     },
     {
       "id": 2,
       "name": "Printer",
       "price": 2100,
-      "quantity": 98,
-      "available": true,
-      "selected": false
+      "quantity": "980",
+      "selected": false,
+      "available": true
     },
     {
       "id": 3,
       "name": "Smartphone",
       "price": 12000,
-      "quantity": 21,
-      "available": true,
-      "selected": true
-    },
-    {
-      "id": 4,
-      "name": "digitalDevice",
-      "price": "1400",
-      "quantity": "44",
+      "quantity": "210",
       "selected": true,
       "available": true
     }

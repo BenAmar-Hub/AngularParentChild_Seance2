@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../../services/products-service.service';
 import { Product } from '../../model/product.model';
 import { catchError, map, Observable, of, startWith } from 'rxjs';
-import { AppDataState, DataStateEnum } from '../../state/product.state';
+import { AppDataState, DataStateEnum, ProductsActionsTypes, ActionEvent } from '../../state/product.state';
 import { Router } from '@angular/router';
+import { EventDriverServiceService } from '../../services/event-driver-service.service';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'app-products',
@@ -17,9 +19,17 @@ export class ProductsComponent implements OnInit {
   products$:Observable<AppDataState<Product[]>>|null=null;
   /*creer un objet DataStateEnum pour la partie html*/
   readonly DataStateEnum=DataStateEnum;/*affecter un type à une variable*/
-  constructor(private productService:ProductsService,private router:Router) { }
+  //il faut injecter le service eventdrivensubject dans ce
+  //composant principal qui a lui d'ecouter les events omis
+  //par les autres composants childs
+  constructor(private productService:ProductsService,private router:Router,private eventDriverService: EventDriverServiceService) { }
 
   ngOnInit(): void {
+    //dèsque le composant démarre il va appeler le service
+    this.eventDriverService.sourceEventSubjectObservable.subscribe((actionEvent:ActionEvent)=>{
+      //dèsque il reçoit un event il le traite
+      this.onActionEvent(actionEvent);
+    })
   }
   onGetAllProducts(){
    /* this.productService.getAllProducts().subscribe(data=>{
@@ -74,4 +84,17 @@ export class ProductsComponent implements OnInit {
   onEdit(p: Product) {
     this.router.navigateByUrl("/editProduct/"+p.id);
   }
+  onActionEvent($event:ActionEvent){
+    switch($event.type){
+      case ProductsActionsTypes.GET_ALL_PRODUCTS:this.onGetAllProducts();break;
+      case ProductsActionsTypes.GET_SELECTED_PRODUCTS:this.onGetSelectedProducts();break;
+      case ProductsActionsTypes.GET_Available_PRODUCTS:this.onGetAvailableProducts();break;
+      case ProductsActionsTypes.SEARCH_PRODUCTS:this.onSearch($event.payload);break;
+      case ProductsActionsTypes.NEW_PRODUCT:this.onNewProducts();break;
+      case ProductsActionsTypes.DELETE_PRODUCT:this.onDelete($event.payload);break;
+      case ProductsActionsTypes.SELECT_PRODUCT:this.onSelect($event.payload);break;
+      case ProductsActionsTypes.EDIT_PRODUCT:this.onEdit($event.payload);break;
+
+    }
+    }
 }
